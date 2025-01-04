@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prova IMC</title>
+</head>
+<body>
+    <script>
+        const nome = prompt("Informe seu nome: ");
+        const alturaCm = parseFloat(prompt("Informe sua altura em centímetros: "));
+        const peso = parseFloat(prompt("Informe seu peso em kg: "));
+
+        const alturaM = alturaCm / 100;
+        const imc = peso / (alturaM * alturaM);
+
+        let classificacao;
+        switch(true){
+            case (imc<16):
+                classificacao = "Baixo peso muito grave";
+            break;
+
+            case (imc>=16 && imc<=16.99):
+                classificacao = "Baixo peso grave";
+            break;
+
+            case (imc>=17 && imc<=18.49):
+                classificacao = "Baixo peso";
+            break;
+
+            case (imc>=18.5 && imc<=24.99):
+                classificacao = "Peso normal";
+            break;
+            
+            case (imc>=25 && imc<=29.99):
+                classificacao = "Sobrepeso";
+            break;
+
+            case (imc>=30 && imc<=34.99):
+                classificacao = "Obesidade grau I";
+            break;
+
+            case (imc>=35 && imc<=39.99):
+                classificacao = "Obesidade grau II";
+            break;
+
+            case (imc>=40):
+                classificacao = "Obesidade grau III";
+            break;
+
+            default:
+                classificacao = "Classificação inválida";
+        }
+
+        console.log(`Nome: ${nome}`);
+        console.log(`IMC: ${imc.toFixed(2)}`);
+        console.log(`Classificação: ${classificacao}`);
+        alert(`Nome: ${nome}\nIMC: ${imc.toFixed(2)}\nClassificação: ${classificacao}`);
+    </script>
+    
+</body>
+</html>
