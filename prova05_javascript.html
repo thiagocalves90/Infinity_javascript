@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerenciador de Tarefas Domésticas Prova 05</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+      background-color: #f4f4f4;
+      justify-content:center;
+      align-items: center;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #task-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .task-item {
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-item button {
+      margin-left: 10px;
+      background-color: red;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .task-item button.edit {
+      background-color: blue;
+    }
+  </style>
+</head>
+<body>
+  <h1 justify-content="center", align-itens="center">Gerenciador de Tarefas Domésticas</h1>
+
+  <input type="text" id="task-input" placeholder="Adicionar uma nova tarefa" />
+  <button onclick="addTask()">Adicionar Tarefa</button>
+
+  <h2>Lista de Tarefas:</h2>
+  <ul id="task-list"></ul>
+
+  <script>
+    let tasks = [];
+
+    function addTask() {
+      const taskInput = document.getElementById("task-input");
+      const taskDescription = taskInput.value.trim();
+
+      if (taskDescription !== "") {
+        tasks.push({
+          id: Date.now(),
+          description: taskDescription
+        });
+
+        taskInput.value = "";
+        renderTaskList();
+      } else {
+        alert("Por favor, insira uma descrição para a tarefa.");
+      }
+    }
+
+    function removeTask(taskId) {
+      tasks = tasks.filter(task => task.id !== taskId);
+      renderTaskList();
+    }
+
+    function editTask(taskId) {
+      const task = tasks.find(t => t.id === taskId);
+      const newDescription = prompt("Editar tarefa:", task.description);
+
+      if (newDescription !== null && newDescription.trim() !== "") {
+        task.description = newDescription.trim();
+        renderTaskList();
+      }
+    }
+
+    function renderTaskList() {
+      const taskList = document.getElementById("task-list");
+      taskList.innerHTML = "";
+
+      tasks.forEach(task => {
+        const listItem = document.createElement("li");
+        listItem.className = "task-item";
+        listItem.innerHTML = `
+          <span>${task.description}</span>
+          <div>
+            <button class="edit" onclick="editTask(${task.id})">Editar</button>
+            <button onclick="removeTask(${task.id})">Excluir</button>
+          </div>
+        `;
+        taskList.appendChild(listItem);
+      });
+    }
+
+    renderTaskList();
+  </script>
+</body>
+</html>
