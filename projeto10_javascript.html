@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO-DO List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        input[type="button"] {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        input[type="button"]:hover {
+            background-color: #218838;
+        }
+
+        #tarefas {
+            margin-top: 20px;
+        }
+
+        .tarefa {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .tarefa.completed span {
+            text-decoration: line-through;
+            color: #aaa;
+        }
+
+        .tarefa button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tarefa button:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>TODO List</h1>
+    <input type="text" id="tarefa" placeholder="Digite uma tarefa">
+    <input type="button" value="Adicionar" onclick="adicionar()">
+    <div id="tarefas"></div>
+
+    <script>
+        function adicionar() {
+            let tarefaTexto = document.getElementById("tarefa").value.trim();
+
+            if (!tarefaTexto) {
+                alert("Por favor, insira uma tarefa.");
+                return;
+            }
+
+            let novaDiv = document.createElement("div");
+            novaDiv.classList.add("tarefa");
+
+            let checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.addEventListener("change", () => {
+                if (checkbox.checked) {
+                    novaDiv.classList.add("completed");
+                } else {
+                    novaDiv.classList.remove("completed");
+                }
+            });
+
+            let spanTexto = document.createElement("span");
+            spanTexto.innerText = tarefaTexto;
+
+            let botaoExcluir = document.createElement("button");
+            botaoExcluir.innerText = "X";
+            botaoExcluir.addEventListener("click", () => {
+                novaDiv.remove();
+            });
+
+            novaDiv.append(checkbox, spanTexto, botaoExcluir);
+            document.getElementById("tarefas").appendChild(novaDiv);
+
+            document.getElementById("tarefa").value = "";
+        }
+    </script>
+
+</body>
+</html>
