@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Interativo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    .question {
+      margin: 20px 0;
+    }
+    .options button {
+      display: block;
+      margin: 10px auto;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .feedback {
+      margin: 20px;
+      font-weight: bold;
+    }
+    .reload {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Quiz Interativo</h1>
+  <div class="question" id="question"></div>
+  <div class="options" id="options"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="reload" id="reload" onclick="reloadQuiz()">Reload</button>
+
+  <script>
+    const questions = [
+      {
+        question: "Quem foi o primeiro presidente dos Estados Unidos?",
+        options: ["George Washington", "Thomas Jefferson", "Abraham Lincoln", "Theodore Roosevelt"],
+        correct: 0
+      },
+      {
+        question: "Qual é o maior planeta do nosso sistema solar?",
+        options: ["Terra", "Marte", "Júpiter", "Saturno"],
+        correct: 2
+      },
+      {
+        question: "Quem pintou a Mona Lisa?",
+        options: ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello"],
+        correct: 0
+      },
+      {
+        question: "Quantos continentes existem no mundo?",
+        options: ["5", "6", "7", "8"],
+        correct: 2
+      }
+    ];
+
+    function getRandomQuestion() {
+      return questions[Math.floor(Math.random() * questions.length)];
+    }
+
+    function displayQuestion() {
+      const questionContainer = document.getElementById('question');
+      const optionsContainer = document.getElementById('options');
+      const feedbackContainer = document.getElementById('feedback');
+      const reloadButton = document.getElementById('reload');
+
+      feedbackContainer.textContent = '';
+      reloadButton.style.display = 'none';
+
+      const currentQuestion = getRandomQuestion();
+      questionContainer.textContent = currentQuestion.question;
+
+      optionsContainer.innerHTML = '';
+      currentQuestion.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.textContent = option;
+        button.onclick = () => {
+          if (index === currentQuestion.correct) {
+            feedbackContainer.textContent = "Acertou!!!";
+          } else {
+            feedbackContainer.textContent = `Incorreto. A resposta correta é: ${currentQuestion.options[currentQuestion.correct]}`;
+          }
+          reloadButton.style.display = 'block';
+        };
+        optionsContainer.appendChild(button);
+      });
+    }
+
+    function reloadQuiz() {
+      displayQuestion();
+    }
+
+    window.onload = displayQuestion;
+  </script>
+
+</body>
+</html>
