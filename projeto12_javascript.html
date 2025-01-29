@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Livros Online</title>
+</head>
+<body>
+    <h1>Catálogo de Livros Online</h1>
+    <p>Abra o console do navegador para interagir com o programa.</p>
+    <script>
+        
+        let catalogo = JSON.parse(localStorage.getItem('catalogoLivros')) || [];
+
+        function salvarLivros() {
+            localStorage.setItem('catalogoLivros', JSON.stringify(catalogo));
+        }
+
+        function listarLivros() {
+            console.clear();
+            console.log('\n--- Catálogo de Livros ---');
+            if (catalogo.length === 0) {
+                console.log('Nenhum livro encontrado.');
+            } else {
+                catalogo.forEach((livro, indice) => {
+                    console.log(`${indice + 1}. Título: ${livro.titulo}, Autor: ${livro.autor}, Gênero: ${livro.genero}, Ano: ${livro.ano}, Avaliação: ${livro.avaliacao || 'N/A'}`);
+                });
+            }
+        }
+
+        function adicionarLivro() {
+            const titulo = prompt("Digite o título do livro:");
+            const autor = prompt("Digite o autor do livro:");
+            const genero = prompt("Digite o gênero do livro:");
+            const ano = prompt("Digite o ano de publicação:");
+            if (titulo && autor && genero && ano) {
+                catalogo.push({ titulo, autor, genero, ano, avaliacao: null });
+                salvarLivros();
+                console.log(`Livro "${titulo}" adicionado com sucesso!`);
+            } else {
+                console.log("Informações incompletas. Livro não adicionado.");
+            }
+        }
+
+        function buscarLivro() {
+            const titulo = prompt("Digite o título do livro que deseja buscar:");
+            const resultados = catalogo.filter((livro) => livro.titulo.toLowerCase().includes(titulo.toLowerCase()));
+            console.log('\n--- Resultado da Busca ---');
+            if (resultados.length === 0) {
+                console.log('Nenhum livro encontrado com esse título.');
+            } else {
+                resultados.forEach((livro, indice) => {
+                    console.log(`${indice + 1}. Título: ${livro.titulo}, Autor: ${livro.autor}, Gênero: ${livro.genero}, Ano: ${livro.ano}, Avaliação: ${livro.avaliacao || 'N/A'}`);
+                });
+            }
+        }
+
+        function classificarLivros() {
+            const criterio = prompt("Classificar por (titulo, autor, genero, ano):").toLowerCase();
+            if (['titulo', 'autor', 'genero', 'ano'].includes(criterio)) {
+                catalogo.sort((a, b) => a[criterio].localeCompare(b[criterio], undefined, { numeric: true }));
+                salvarLivros();
+                console.log(`\n--- Livros classificados por ${criterio}: ---`);
+                listarLivros();
+            } else {
+                console.log("Critério inválido.");
+            }
+        }
+
+        function avaliarLivro() {
+            const titulo = prompt("Digite o título do livro que deseja avaliar:");
+            const livro = catalogo.find((livro) => livro.titulo.toLowerCase() === titulo.toLowerCase());
+            if (livro) {
+                const avaliacao = prompt("Digite uma avaliação para o livro (1 a 5):");
+                const nota = parseInt(avaliacao);
+                if (nota >= 1 && nota <= 5) {
+                    livro.avaliacao = nota;
+                    salvarLivros();
+                    console.log(`Livro "${titulo}" avaliado com sucesso!`);
+                } else {
+                    console.log("Avaliação inválida.");
+                }
+            } else {
+                console.log("Livro não encontrado.");
+            }
+        }
+
+        function exibirMenu() {
+            console.clear();
+            console.log('--- Menu ---');
+            console.log('1. Listar Livros');
+            console.log('2. Adicionar Livro');
+            console.log('3. Buscar Livro por Título');
+            console.log('4. Classificar Livros');
+            console.log('5. Avaliar Livro');
+            console.log('6. Sair');
+
+            const opcao = prompt("Escolha uma opção (1-Listar / 2- Adicionar / 3-Buscar / 4- Classificar / 5- Avaliar / 6- Sair):");
+            switch (opcao) {
+                case '1':
+                    listarLivros();
+                    break;
+                case '2':
+                    adicionarLivro();
+                    break;
+                case '3':
+                    buscarLivro();
+                    break;
+                case '4':
+                    classificarLivros();
+                    break;
+                case '5':
+                    avaliarLivro();
+                    break;
+                case '6':
+                    console.log("Saindo do programa.");
+                    return;
+                default:
+                    console.log("Opção inválida.");
+            }
+
+            setTimeout(exibirMenu, 500);
+        }
+
+        exibirMenu();
+    </script>
+</body>
+</html>
