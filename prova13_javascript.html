@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Caixa Eletrônico</title>
+    <style>
+        body {
+            text-align: center;
+            margin: 50px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        input, select, option {
+            margin: 10px;
+            padding: 10px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+        .container {
+            margin: auto;
+            max-width: 400px;
+            padding: 10px;
+            border: 1px solid white;
+            border-radius: 10px;
+            box-shadow: 3px 3px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simulador de Caixa Eletrônico</h1>
+        <label for="operacao">Escolha a operação:</label>
+        <select name="Operação" id="operacao" onchange="toggleInput()">
+            <option value="saldo">Consultar Saldo</option>
+            <option value="saque">Sacar</option>
+            <option value="deposito">Depositar</option>
+        </select>
+        <input type="number" id="valor" placeholder="Digite o valor" min="1">
+        <button onclick="realizarOperacao()">Realizar</button>
+        <p id="resultado"></p>
+    </div>
+    <script>
+        let saldo = 1000;
+
+        function toggleInput() {
+            const operacao = document.getElementById("operacao").value;
+            const valorInput = document.getElementById("valor");
+            valorInput.style.display = operacao === "saldo" ? "none" : "block";
+        }
+
+        function realizarOperacao(){
+            try {
+                const operacao = document.getElementById("operacao").value;
+                const valorInput = document.getElementById("valor");
+                const resultado = document.getElementById("resultado");
+                let mensagem = ""
+
+                if (operacao === "saldo") {
+                    mensagem = `Seu saldo atual é R$ ${saldo.toFixed(2)}`;
+                } else {
+                    let valor = parseFloat(valorInput.value);
+                    if (isNaN(valor) || valor <= 0) {
+                        throw new Error("Por favor, insira um valor válido.");
+                    }
+                    
+                    if (operacao === "saque") {
+                        if (valor > saldo) {
+                            throw new Error("Saldo insuficiente para saque.");
+                        }
+                        saldo -= valor;
+                        mensagem = `Saque de R$ ${valor.toFixed(2)} realizado com sucesso. Novo saldo: R$ ${saldo.toFixed(2)}`;
+                    } else if (operacao === "deposito") {
+                        saldo += valor;
+                        mensagem = `Depósito de R$ ${valor.toFixed(2)} realizado com sucesso. Novo saldo: R$ ${saldo.toFixed(2)}`;
+                    } else {
+                        throw new Error("Operação inválida.");
+                    }
+                }
+                resultado.textContent = mensagem;
+                valorInput.value = "";
+            } catch (error) {
+                document.getElementById("resultado").textContent = error.message;
+            }
+        }
+        toggleInput()
+    </script>
+</body>
+</html>
