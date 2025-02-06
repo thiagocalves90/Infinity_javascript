@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeria de Cachorros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            justify-content: center;
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .error {
+            color: red;
+        }
+        .loading {
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Galeria de Cachorros</h1>
+    <div class="buttons-container" id="containerBotoes"></div>
+    <h2 id="racaSelecionada"></h2>
+    <p class="error" id="mensagemErro"></p>
+    <p class="loading" id="mensagemCarregamento"></p>
+    <div class="gallery" id="galeria"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const containerBotoes = document.getElementById("containerBotoes");
+            const galeria = document.getElementById("galeria");
+            const racaSelecionada = document.getElementById("racaSelecionada");
+            const mensagemErro = document.getElementById("mensagemErro");
+            const mensagemCarregamento = document.getElementById("mensagemCarregamento");
+
+            try {
+                mensagemCarregamento.textContent = "Carregando raças...";
+                const respostaRacas = await fetch("https://dog.ceo/api/breeds/list/all");
+                const dadosRacas = await respostaRacas.json();
+                const racas = Object.keys(dadosRacas.message);
+
+                racas.forEach(raca => {
+                    const botao = document.createElement("button");
+                    botao.textContent = raca;
+                    botao.addEventListener("click", () => buscarImagens(raca));
+                    containerBotoes.appendChild(botao);
+                });
+
+                mensagemCarregamento.textContent = "";
+            } catch (erro) {
+                mensagemErro.textContent = "Erro ao carregar a lista de raças.";
+                mensagemCarregamento.textContent = "";
+            }
+
+            async function buscarImagens(raca) {
+                racaSelecionada.textContent = raca;
+                galeria.innerHTML = "";
+                mensagemErro.textContent = "";
+                mensagemCarregamento.textContent = "Carregando imagens...";
+
+                try {
+                    const respostaImagens = await fetch(`https://dog.ceo/api/breed/${raca}/images/random/4`);
+                    const dadosImagens = await respostaImagens.json();
+
+                    dadosImagens.message.forEach(imagem => {
+                        const elementoImagem = document.createElement("img");
+                        elementoImagem.src = imagem;
+                        elementoImagem.alt = raca;
+                        galeria.appendChild(elementoImagem);
+                    });
+
+                    mensagemCarregamento.textContent = "";
+                } catch (erro) {
+                    mensagemErro.textContent = "Erro ao carregar imagens.";
+                    mensagemCarregamento.textContent = "";
+                }
+            }
+        });
+    </script>
+</body>
+</html>
