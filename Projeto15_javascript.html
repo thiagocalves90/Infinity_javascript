@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Contatos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .lista-contatos {
+            margin-top: 20px;
+        }
+        .item-contato {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .item-contato button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Gerenciamento de Contatos</h1>
+
+    <h2>Adicionar Novo Contato</h2>
+    <input type="text" id="nome" placeholder="Nome">
+    <input type="text" id="telefone" placeholder="Número de Telefone">
+    <input type="email" id="email" placeholder="Endereço de E-mail">
+    <button onclick="adicionarContato()">Adicionar Contato</button>
+
+    <h2>Lista de Contatos</h2>
+    <button onclick="visualizarContatos()">Visualizar Contatos</button>
+
+    <div class="lista-contatos" id="listaContatos"></div>
+</div>
+
+<script>
+    let contatos = [];
+
+    function adicionarContato() {
+        const nome = document.getElementById('nome').value;
+        const telefone = document.getElementById('telefone').value;
+        const email = document.getElementById('email').value;
+
+        if (nome && telefone && email) {
+            const contato = { nome, telefone, email };
+            contatos.push(contato);
+            limparCampos();
+            alert('Contato adicionado com sucesso!');
+        } else {
+            alert('Por favor, preencha todos os campos.');
+        }
+    }
+
+    function visualizarContatos() {
+        const listaContatos = document.getElementById('listaContatos');
+        listaContatos.innerHTML = '';
+
+        contatos.forEach((contato, indice) => {
+            const itemContato = document.createElement('div');
+            itemContato.className = 'item-contato';
+            itemContato.innerHTML = `
+                <div>
+                    <strong>${contato.nome}</strong><br>
+                    ${contato.telefone}
+                </div>
+                <div>
+                    <button onclick="editarContato(${indice})">Editar</button>
+                    <button onclick="excluirContato(${indice})">Excluir</button>
+                </div>
+            `;
+            listaContatos.appendChild(itemContato);
+        });
+    }
+
+    function editarContato(indice) {
+        const contato = contatos[indice];
+        const novoNome = prompt('Editar Nome:', contato.nome);
+        const novoTelefone = prompt('Editar Telefone:', contato.telefone);
+        const novoEmail = prompt('Editar E-mail:', contato.email);
+
+        if (novoNome && novoTelefone && novoEmail) {
+            contatos[indice] = { nome: novoNome, telefone: novoTelefone, email: novoEmail };
+            visualizarContatos();
+            alert('Contato atualizado com sucesso!');
+        } else {
+            alert('Todos os campos devem ser preenchidos.');
+        }
+    }
+
+    function excluirContato(indice) {
+        if (confirm('Tem certeza que deseja excluir este contato?')) {
+            contatos.splice(indice, 1);
+            visualizarContatos();
+            alert('Contato excluído com sucesso!');
+        }
+    }
+
+    function limparCampos() {
+        document.getElementById('nome').value = '';
+        document.getElementById('telefone').value = '';
+        document.getElementById('email').value = '';
+    }
+</script>
+
+</body>
+</html>
